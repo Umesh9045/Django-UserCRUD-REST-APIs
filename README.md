@@ -1,111 +1,104 @@
-# Django-UserCRUD-REST-APIs# Django Project Setup Guide
+# Django REST API Setup Guide
 
-## 1. Create a Python Virtual Environment
+## 0. Create and Activate Virtual Environment
 ```sh
+# Create virtual environment
 python -m venv .venv
+
+# Activate virtual environment
+# Windows:
+.venv\Scripts\activate
+# Mac/Linux:
+source .venv/bin/activate
+
+# To deactivate virtual environment
+# Run:
+deactivate
 ```
 
-## 2. Activate the Virtual Environment
-- **Windows**:
-  ```sh
-  .venv\Scripts\activate
-  ```
-- **Mac/Linux**:
-  ```sh
-  source .venv/bin/activate
-  ```
-
-## 3. Install Django and Django REST Framework
+## 1. Install Django and Django REST Framework
 ```sh
 pip install django djangorestframework
 ```
 
-## 4. Create Django Project `newproject`
+## 2. Create a Django Project
 ```sh
 django-admin startproject newproject
-```
-
-## 5. Navigate to the Project Directory
-```sh
 cd newproject
 ```
 
-## 6. Create Django Apps
+## 3. Create an App for APIs
 ```sh
 python manage.py startapp api
 ```
 
-## 7. Configure `settings.py`
-- Add the created app and Django REST Framework to `INSTALLED_APPS`:
-  ```python
-  INSTALLED_APPS = [
-      'django.contrib.admin',
-      'django.contrib.auth',
-      'django.contrib.contenttypes',
-      'django.contrib.sessions',
-      'django.contrib.messages',
-      'django.contrib.staticfiles',
-      'rest_framework',
-      'api',
-  ]
-  ```
-- Configure Database, Middleware, and Static files as needed.
+## 4. Configure `settings.py`
+- Add the app and REST framework to `INSTALLED_APPS`:
+```python
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'rest_framework',
+    'api',
+]
+```
 
-## 8. Create Models and Perform Migrations
+## 5. Create a Model (User)
+- In `api/models.py`:
+```python
+from django.db import models
+
+class User(models.Model):
+    name = models.CharField(max_length=100)
+    age = models.IntegerField()
+```
+
+- Run migrations:
 ```sh
 python manage.py makemigrations
 python manage.py migrate
 ```
 
-## 9. Create `serializers.py`
-- Serializers convert data into JSON for APIs:
-  ```python
-  from rest_framework import serializers
-  
-  class UserSerializer(serializers.Serializer):
-      name = serializers.CharField(max_length=100)
-      age = serializers.IntegerField()
-  ```
+## 6. Create a Serializer (JSON Converter)
+- In `api/serializers.py`:
+```python
+#in api folder
+from rest_framework import serializers
+from .models import User
 
-## 10. Create `views.py`
-- Define API views using Django REST Framework:
-  ```python
-  from rest_framework.decorators import api_view
-  from rest_framework.response import Response
-  from .serializers import UserSerializer
-  
-  @api_view(['GET'])
-  def get_user(request):
-      return Response(UserSerializer({'name': "Umesh", 'age': 21}).data)
-  ```
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
+```
 
-## 11. Configure URL Handling
-- Update `urls.py`:
-  ```python
-  from django.urls import path
-  from api.views import get_user
-  
-  urlpatterns = [
-      path('users/', get_user, name='get_user'),
-  ]
-  ```
+## 7. Create API Views (GET and POST)
 
-## 12. Run the Development Server
+
+## 8. Define API URLs
+- In `api/urls.py`:
+```python
+urlpatterns = [
+    path('users/', get_users, name='get_users'),
+    path('users/create/', create_user, name='create_user'),
+]
+```
+
+- Update `newproject/urls.py`:
+```python
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('api/', include('api.urls')),
+]
+```
+
+## 9. Run the Server and Test APIs
 ```sh
 python manage.py runserver
 ```
 
-## 13. Create a Superuser (for Admin Panel)
-```sh
-python manage.py createsuperuser
-```
-
-## 14. Run Tests
-```sh
-python manage.py test
-```
-
-## 15. Deactivate the Virtual Environment (if needed)
-```sh
-deactivate
-```
+---
