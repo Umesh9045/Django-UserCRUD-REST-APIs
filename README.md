@@ -1,6 +1,6 @@
 # Django REST API Setup Guide
 
-## 0. Create and Activate Virtual Environment
+## Create and Activate Virtual Environment
 ```sh
 # Create virtual environment
 python -m venv .venv
@@ -16,23 +16,23 @@ source .venv/bin/activate
 deactivate
 ```
 
-## 1. Install Django and Django REST Framework
+## Install Django and Django REST Framework
 ```sh
 pip install django djangorestframework
 ```
 
-## 2. Create a Django Project
+## Create a Django Project
 ```sh
 django-admin startproject newproject
 cd newproject
 ```
 
-## 3. Create an App for APIs
+## Create an App for APIs
 ```sh
 python manage.py startapp api
 ```
 
-## 4. Configure `settings.py`
+## Configure `settings.py`
 - Add the app and REST framework to `INSTALLED_APPS`:
 ```python
 INSTALLED_APPS = [
@@ -47,7 +47,7 @@ INSTALLED_APPS = [
 ]
 ```
 
-## 5. Create a Model (User)
+## Create a Model (User)
 - In `api/models.py`:
 ```python
 from django.db import models
@@ -63,7 +63,7 @@ python manage.py makemigrations
 python manage.py migrate
 ```
 
-## 6. Create a Serializer (JSON Converter)
+## Create a Serializer (JSON Converter)
 - In `api/serializers.py`:
 ```python
 #in api folder
@@ -76,10 +76,8 @@ class UserSerializer(serializers.ModelSerializer):
         fields = '__all__'
 ```
 
-## 7. Create API Views (GET and POST)
 
-
-## 8. Define API URLs
+## Define API URLs
 - In `api/urls.py`:
 ```python
 urlpatterns = [
@@ -96,7 +94,7 @@ urlpatterns = [
 ]
 ```
 
-## 9. Run the Server and Test APIs
+## Run the Server and Test APIs
 ```sh
 python manage.py runserver
 ```
